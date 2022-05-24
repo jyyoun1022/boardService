@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>제목입니다.</title>
+</head>
+<body>
+<h1 th:text="${board.title}"></h1>
+<p th:text="${board.content}"></p>
+<a th:href="@{/board/delete(id=${board.id})}">글 삭제</a>
+<a th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
+</body>
+</html>
