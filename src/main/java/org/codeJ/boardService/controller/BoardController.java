@@ -3,6 +3,10 @@ package org.codeJ.boardService.controller;
 import lombok.RequiredArgsConstructor;
 import org.codeJ.boardService.entity.Board;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +38,27 @@ public class BoardController {
        return "message";
    }
     @GetMapping("/list")
-    public String boardList(Model model){
+    public String boardList(Model model,
+                            @PageableDefault(page=0,size=10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable,
+                            String searchKeyword){
 
-        model.addAttribute("list",boardService.getList());
+        Page<Board> list = null;
+
+        if(searchKeyword == null){
+            list = boardService.getList(pageable);
+        }else{
+            list = boardService.boardSearchList(searchKeyword, pageable);
+        }
+
+
+        int nowPage = list.getPageable().getPageNumber()+1;
+        int startPage = Math.max(nowPage - 4,1);
+        int endPage = Math.min(nowPage + 5,list.getTotalPages());
+
+        model.addAttribute("list",list);
+        model.addAttribute("nowPage",nowPage);
+        model.addAttribute("startpage",startPage);
+        model.addAttribute("endpage",endPage);
 
         return "boardlist";
     }
